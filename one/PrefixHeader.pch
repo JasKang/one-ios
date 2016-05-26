@@ -1,0 +1,120 @@
+//
+//  PrefixHeader.pch
+//  one
+//
+//  Created by JasKang on 15/5/24.
+//  Copyright (c) 2015年 JasKang. All rights reserved.
+//
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVFoundation.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <QuartzCore/QuartzCore.h>
+#import <Accelerate/Accelerate.h>
+
+#endif
+
+#ifndef one_PrefixHeader_pch
+#define one_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+ 
+#import <Masonry.h>
+#import <UIImageView+WebCache.h>
+
+#import "Models.h"
+#import "Util.h"
+#import "Hud.h"
+#import "AppManager.h"
+#import "OApiManager.h"
+
+
+
+#define AppDel ([AppManager sharedInstance])
+
+#define AppVoip ([VoipHelper sharedInstance])
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+//---------------------打印日志--------------------------
+//Debug模式下打印日志,当前行,函数名
+#if DEBUG
+# define NSLog(fmt, ...) NSLog((@"\n[===%@ :%d===]\n%s\n" fmt), [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, __FUNCTION__, ##__VA_ARGS__);
+#else
+# define NSLog(...);
+#endif
+
+//----------------------系统设备相关----------------------------
+//获取系统版本
+#define Version [[[UIDevice currentDevice] systemVersion] floatValue]
+//keyWindow
+#define KeyWindow [UIApplication sharedApplication].keyWindow
+//获取设备屏幕尺寸
+#define ScreenBounds [UIScreen mainScreen].bounds
+#define ScreenWidth ([UIScreen mainScreen].bounds.size.width)
+#define ScreenHeight ([UIScreen mainScreen].bounds.size.height)
+
+//----------------------颜色相关---------------------------
+//十六进制颜色 带透明
+#define GetUIColorAlpha(hexValue,a) [UIColor colorWithRed:((float)((hexValue & 0xFF0000) >> 16))/255.0 green:((float)((hexValue & 0xFF00) >> 8))/255.0 blue:((float)(hexValue & 0xFF))/255.0 alpha:a]
+//十六进制颜色
+#define GetUIColor(hexValue) GetUIColorAlpha(hexValue,1.0)
+
+#define UIColorBule GetUIColorAlpha(0x0b8cce,1.0)
+#define UIColorYellow GetUIColorAlpha(0xfff000,1.0)
+#define UIColorDarkYellow GetUIColorAlpha(0xa78e17,1.0)
+#define UIColorBackGray GetUIColorAlpha(0xefefef,1.0)
+#define UIColorLine GetUIColorAlpha(0xe2e2e2,1.0)
+
+
+//----------------------图片相关----------------------------
+#define LoadImage(file) [UIImage imageNamed:file]
+#define LoadImageExt(file,ext) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]pathForResource:file ofType:ext]]
+#define ImageToData(uiimage) UIImageJPEGRepresentation(uiimage,1.0)
+
+//可拉伸的图片
+#define LoadResizImage(name,top,left,bottom,right) [[UIImage imageNamed:name] resizableImageWithCapInsets:UIEdgeInsetsMake(top,left,bottom,right)]
+#define LoadResizImageWithMode(name,top,left,bottom,right,mode) [[UIImage imageNamed:name] resizableImageWithCapInsets:UIEdgeInsetsMake(top,left,bottom,right) resizingMode:mode]
+//----------------------nib相关----------------------------
+//加载Xib
+#define loadXib(name) [[[NSBundle mainBundle] loadNibNamed:name owner:nil options:nil] firstObject]
+
+//----------------------时间相关----------------------------
+//取当前时间戳
+#define TimeInterval [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
+#define TimeIntervalWithDate(date) [NSString stringWithFormat:@"%.0f",[date timeIntervalSince1970]]
+
+
+//G－C－D
+#define RunBacK(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+#define RunMain(block) dispatch_async(dispatch_get_main_queue(),block)
+
+//----------------------NSUserDefaults----------------------------
+//NSUserDefaults 实例化
+#define UserDefaults [NSUserDefaults standardUserDefaults]
+#define GetUserDefaults(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
+#define GetUserDefaultsBool(key)[[NSUserDefaults standardUserDefaults] boolForKey:key]
+#define SetUserDefaults(key,value) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
+
+//----------------------数据----------------------------
+#define IsFirstRun [[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]
+
+//----------------------常量----------------------------
+//key常量 实例化
+#define kDeviceToken @"kDeviceToken"
+#define kLocalUser @"kLocalUser"
+#define kIsLogin @"kIsLogin"
+#define kNewPush @"kNewPush"
+#define kReloadUser @"kReloadUser"
+
+#define cTabHeight 54.0f
+
+
+#endif
